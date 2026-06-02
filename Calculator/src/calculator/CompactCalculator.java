@@ -18,7 +18,7 @@ public class CompactCalculator extends JFrame {
     private static double num1 = 0,num2 = 0;
     private static String operator = "";
     private static boolean newInput = true;
-    private static String result = "0";
+    private static final String result = "0";
     
     //the Strings tht will be drawn on the labels are stored in this multi-dimension array.
     private static final String[][] BUTTONS = {{"7","8","9","/"},{"4","5","6","*"},{"1","2","3","-"},{"0","C","=","+"}};
