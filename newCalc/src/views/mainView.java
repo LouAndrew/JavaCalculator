@@ -20,6 +20,10 @@ public class mainView extends javax.swing.JFrame {
         initComponents();
     }
 
+    private char operator;
+    private double number1;
+    private double number2;
+    private double result;
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -57,9 +61,11 @@ public class mainView extends javax.swing.JFrame {
 
         button1.setFont(new java.awt.Font("Inter", 1, 18)); // NOI18N
         button1.setText("1");
+        button1.addActionListener(this::button1ActionPerformed);
 
         button0.setFont(new java.awt.Font("Inter", 1, 18)); // NOI18N
         button0.setText("0");
+        button0.addActionListener(this::button0ActionPerformed);
 
         button8.setFont(new java.awt.Font("Inter", 1, 18)); // NOI18N
         button8.setText("8");
@@ -195,53 +201,92 @@ public class mainView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void button8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button8ActionPerformed
-        // TODO add your handling code here:
+        insertValue('8');
     }//GEN-LAST:event_button8ActionPerformed
 
     private void button5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button5ActionPerformed
-        // TODO add your handling code here:
+        insertValue('5');
     }//GEN-LAST:event_button5ActionPerformed
 
     private void clearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonActionPerformed
-        // TODO add your handling code here:
+        resultLabel.setText("00");
     }//GEN-LAST:event_clearButtonActionPerformed
 
     private void button9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button9ActionPerformed
-        // TODO add your handling code here:
+        insertValue('9');
     }//GEN-LAST:event_button9ActionPerformed
 
     private void button2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button2ActionPerformed
-        // TODO add your handling code here:
+        insertValue('2');
     }//GEN-LAST:event_button2ActionPerformed
 
     private void equalsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_equalsButtonActionPerformed
-        // TODO add your handling code here:
+        number2 = Double.parseDouble(resultLabel.getText());
+        calculate(number1,number2,operator);
+        resultLabel.setText(""+result);
     }//GEN-LAST:event_equalsButtonActionPerformed
 
     private void button3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button3ActionPerformed
-        // TODO add your handling code here:
+        insertValue('3');
     }//GEN-LAST:event_button3ActionPerformed
 
     private void button6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button6ActionPerformed
-        // TODO add your handling code here:
+        insertValue('6');
     }//GEN-LAST:event_button6ActionPerformed
 
     private void divideButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_divideButtonActionPerformed
-        // TODO add your handling code here:
+        insertSymbol('/');
     }//GEN-LAST:event_divideButtonActionPerformed
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-        // TODO add your handling code here:
+        insertSymbol('+');
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void multiplyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_multiplyButtonActionPerformed
-        // TODO add your handling code here:
+        insertSymbol('*');
     }//GEN-LAST:event_multiplyButtonActionPerformed
 
     private void minusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_minusButtonActionPerformed
-        // TODO add your handling code here:
+        insertSymbol('-');
     }//GEN-LAST:event_minusButtonActionPerformed
 
+    private void button0ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button0ActionPerformed
+        insertValue('0');
+    }//GEN-LAST:event_button0ActionPerformed
+
+    private void button1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button1ActionPerformed
+        insertValue('1');
+    }//GEN-LAST:event_button1ActionPerformed
+
+    private void insertValue(char value){
+        if(resultLabel.getText().equals("00")){
+            resultLabel.setText(""+value);
+        }else{
+            resultLabel.setText(resultLabel.getText()+value);
+        }
+    }
+    private void insertSymbol(char symbol){
+        if (!"00".equals(resultLabel.getText())){
+            number1 = Double.parseDouble(resultLabel.getText());
+            insertValue(symbol);
+            resultLabel.setText("");
+            this.operator = symbol;
+        }
+    }
+    private void calculate(double num1,double num2,char sym){
+        switch (sym){
+            case '+':
+                result = num1 + num2;
+            case '-':
+                result = num1 - num2;
+            case '/':
+                result = num1 / num2;
+            case '*':
+                result = num1 * num2;
+            default:
+                result = 00;
+        }   
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
