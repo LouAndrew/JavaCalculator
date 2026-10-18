@@ -1,5 +1,10 @@
 package views;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import javax.swing.JFrame;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -17,6 +22,9 @@ public class mainView extends javax.swing.JFrame {
      * Creates new form mainView
      */
     public mainView() {
+        setUndecorated(true);
+        this.setLocation(400, 50);
+        moveWindow(this);
         initComponents();
     }
 
@@ -50,6 +58,8 @@ public class mainView extends javax.swing.JFrame {
         multiplyButton = new javax.swing.JButton();
         minusButton = new javax.swing.JButton();
         resultLabel = new javax.swing.JLabel();
+        closeButton = new javax.swing.JButton();
+        hideButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -115,9 +125,15 @@ public class mainView extends javax.swing.JFrame {
         minusButton.setText("-");
         minusButton.addActionListener(this::minusButtonActionPerformed);
 
-        resultLabel.setFont(new java.awt.Font("Inter", 1, 48)); // NOI18N
+        resultLabel.setFont(new java.awt.Font("Inter", 1, 49)); // NOI18N
         resultLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         resultLabel.setText("00");
+
+        closeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pic/close.png"))); // NOI18N
+        closeButton.addActionListener(this::closeButtonActionPerformed);
+
+        hideButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pic/hide.png"))); // NOI18N
+        hideButton.addActionListener(this::hideButtonActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -126,6 +142,10 @@ public class mainView extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(hideButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(closeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(resultLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 484, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(equalsButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -168,7 +188,11 @@ public class mainView extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(resultLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(closeButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(hideButton, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(resultLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(button8, javax.swing.GroupLayout.DEFAULT_SIZE, 55, Short.MAX_VALUE)
@@ -258,6 +282,14 @@ public class mainView extends javax.swing.JFrame {
         insertValue('1');
     }//GEN-LAST:event_button1ActionPerformed
 
+    private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_closeButtonActionPerformed
+
+    private void hideButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hideButtonActionPerformed
+        this.setExtendedState(JFrame.ICONIFIED);
+    }//GEN-LAST:event_hideButtonActionPerformed
+
     private void insertValue(char value) {
         String text = resultLabel.getText();
 
@@ -267,7 +299,7 @@ public class mainView extends javax.swing.JFrame {
             return;
         }
 
-        if (text.equals("0")) {
+        if (text.equals("00") || text.equals("0")) {
             resultLabel.setText(String.valueOf(value));  // replace the leading 0
         } else {
             resultLabel.setText(text + value);
@@ -284,25 +316,37 @@ public class mainView extends javax.swing.JFrame {
     }
     private void calculate(double num1, double num2, char sym) {
         switch (sym) {
-            case '+':
-                result = num1 + num2;
-                break;
-            case '-':
-                result = num1 - num2;
-                break;
-            case '*':
-                result = num1 * num2;
-                break;
-            case '/':
+            case '+' -> result = num1 + num2;
+            case '-' -> result = num1 - num2;
+            case '*' -> result = num1 * num2;
+            case '/' -> {
                 if (num2 == 0) {
                     resultLabel.setText("Error");
                     return;
                 }
                 result = num1 / num2;
-                break;
-            default:
-                result = num2;                           // unknown operator: keep the current number
+            }
+            default -> result = num2;                           // unknown operator: keep the current number
         }
+    }
+    
+    private int x = 0;
+    private int y = 0;
+    private void moveWindow(JFrame fram){
+
+        addMouseListener(new MouseAdapter(){
+            @Override
+            public void mousePressed(MouseEvent me){
+                x = me.getX();
+                y = me.getY();
+            }
+        });
+        addMouseMotionListener(new MouseMotionAdapter (){
+            @Override
+            public void mouseDragged(MouseEvent me){
+                fram.setLocation(me.getXOnScreen()-x,me.getYOnScreen()-y);
+            }
+        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -318,8 +362,10 @@ public class mainView extends javax.swing.JFrame {
     private javax.swing.JButton button8;
     private javax.swing.JButton button9;
     private javax.swing.JButton clearButton;
+    private javax.swing.JButton closeButton;
     private javax.swing.JButton divideButton;
     private javax.swing.JButton equalsButton;
+    private javax.swing.JButton hideButton;
     private javax.swing.JButton minusButton;
     private javax.swing.JButton multiplyButton;
     private javax.swing.JLabel resultLabel;
