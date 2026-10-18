@@ -258,34 +258,51 @@ public class mainView extends javax.swing.JFrame {
         insertValue('1');
     }//GEN-LAST:event_button1ActionPerformed
 
-    private void insertValue(char value){
-        if(resultLabel.getText().equals("00")){
-            resultLabel.setText(""+value);
-        }else{
-            resultLabel.setText(resultLabel.getText()+value);
+    private void insertValue(char value) {
+        String text = resultLabel.getText();
+
+        if (value == '.') {
+            if (text.contains(".")) return;              // block 1.2.3
+            resultLabel.setText(text.isEmpty() || text.equals("0") ? "0." : text + ".");
+            return;
+        }
+
+        if (text.equals("0")) {
+            resultLabel.setText(String.valueOf(value));  // replace the leading 0
+        } else {
+            resultLabel.setText(text + value);
         }
     }
-    private void insertSymbol(char symbol){
-        if (!"00".equals(resultLabel.getText())){
+    private void insertSymbol(char symbol) {
+        try {
             number1 = Double.parseDouble(resultLabel.getText());
-            insertValue(symbol);
-            resultLabel.setText("");
-            this.operator = symbol;
+        } catch (NumberFormatException e) {
+            return;                                      // nothing valid to operate on
         }
+        this.operator = symbol;
+        resultLabel.setText("0");                        // ready for the second number
     }
-    private void calculate(double num1,double num2,char sym){
-        switch (sym){
+    private void calculate(double num1, double num2, char sym) {
+        switch (sym) {
             case '+':
                 result = num1 + num2;
+                break;
             case '-':
                 result = num1 - num2;
-            case '/':
-                result = num1 / num2;
+                break;
             case '*':
                 result = num1 * num2;
+                break;
+            case '/':
+                if (num2 == 0) {
+                    resultLabel.setText("Error");
+                    return;
+                }
+                result = num1 / num2;
+                break;
             default:
-                result = 00;
-        }   
+                result = num2;                           // unknown operator: keep the current number
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
